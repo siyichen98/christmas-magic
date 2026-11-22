@@ -48,8 +48,13 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus
 .dot{width:7px;height:7px;border-radius:50%;background:#78533b;display:inline-block;margin-right:5px}.dot.ok{background:#b6e8a1;box-shadow:0 0 8px rgba(173,234,156,.7)}.dot.warn{background:#eeac65}
 #handsDetail{margin:4px 0 8px;color:#c9a987;font-size:10px;line-height:1.3;min-height:24px}
 #breathHeader{display:flex;justify-content:space-between;font-size:10px;color:#d9bc9a;gap:8px}
-#meter{margin-top:5px;background:rgba(255,222,174,.1);border-radius:12px;height:8px;position:relative;overflow:hidden}#meterFill{height:100%;width:0;background:linear-gradient(90deg,#c8975c,#ffe0a3,#fff);border-radius:12px;transition:width .07s}#meter::after{content:"";position:absolute;top:0;bottom:0;left:62%;width:2px;background:#fff5d9}
+#meter{margin-top:5px;background:rgba(255,222,174,.1);border-radius:12px;height:8px;position:relative;overflow:hidden}#meterFill{height:100%;width:0;background:linear-gradient(90deg,#bd9466,#ffe0a3,#fff);border-radius:12px;transition:none;will-change:width}#meter::after{content:"";position:absolute;top:0;bottom:0;left:62%;width:2px;background:#fff5d9}
 #breatheState{font-size:10px;line-height:1.4;margin:7px 0;color:#eccfa4;min-height:14px}
+#cupBadge{display:flex;align-items:center;gap:6px;font-size:10px;color:#c7ad8e;background:rgba(255,219,175,.07);border:1px solid rgba(231,190,129,.17);padding:5px 7px;border-radius:6px;margin-bottom:7px;transition:background .12s}
+#cupBadge.ready{color:#f4e3c0;background:rgba(182,217,155,.16);border-color:rgba(197,234,171,.53)}
+#cupBadge b{display:inline-block;width:6px;height:6px;background:#745540;border-radius:50%}#cupBadge.ready b{background:#c4f5a8;box-shadow:0 0 9px #c4f5a8}
+#meter::after{left:60%}
+
 #hudOptions{display:flex;align-items:center;gap:7px;justify-content:space-between}
 #sensitivity{accent-color:#e7bc78;width:93px;height:13px;cursor:pointer}#hudOptions label{font-size:10px;color:#c7ad8e;white-space:nowrap}
 #testSnow{background:transparent;color:#dcbf98;border:1px solid rgba(241,198,138,.36);border-radius:5px;padding:5px 7px;font-size:10px}
@@ -85,28 +90,32 @@ button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus
  </div>
  <canvas id="fx"></canvas><div id="cursor"></div>
  <header id="title"><div class="over">AN INTERACTIVE WINTER NIGHT</div><h1>Christmas<br><em>Magic</em></h1><p>Make the winter with your hands.</p></header>
- <div id="statusLine"><div class="phase" id="phaseName">The tree is sleeping</div><div class="desc">张开手掌移动：树随你转动<br>食指靠近铃铛：让它响起<br>双手捧雪，然后轻轻吹气</div><span id="glowNumber">WINTER · 00%</span></div>
+ <div id="statusLine"><div class="phase" id="phaseName">The tree is sleeping</div><div class="desc">张开手掌移动：树随你转动<br>食指靠近铃铛：让它响起<br>双手靠拢捧雪，识别就绪后再吹气</div><span id="glowNumber">WINTER · 00%</span></div>
  <section id="camHud" aria-label="实时摄像头和麦克风识别反馈">
   <div class="hudTop"><span>LIVE HAND TRACKING</span><span class="live" id="live"><b></b> CAMERA</span></div>
   <div id="videoWrap"><video id="camera" autoplay playsinline muted></video><canvas id="handMarks"></canvas><div id="cameraHelp">等待开启摄像头<br>双手靠近镜头即可识别</div></div>
   <div id="handsLabel"><span><span id="handDot" class="dot"></span><span id="handStatus">手势识别未启动</span></span><span id="handCount">0 hands</span></div>
   <div id="handsDetail">允许权限后将显示实时手部骨架。</div>
+  <div id="cupBadge"><b></b><span id="cupText">捧雪状态：等待两只手靠近</span></div>
   <div id="breathHeader"><span><span id="micDot" class="dot"></span>吹气检测</span><span id="micText">MIC —</span></div>
   <div id="meter"><div id="meterFill"></div></div>
-  <div id="breatheState">电平会随麦克风声音变化</div>
-  <div id="hudOptions"><label>灵敏度 <input id="sensitivity" type="range" min="0" max="100" value="76" aria-label="吹气灵敏度"></label><button id="testSnow" type="button">测试雪花 ❄</button></div>
+  <div id="breatheState">请先把双手合拢，看到“已捧雪”再吹气</div>
+  <div id="hudOptions"><label>吹气灵敏度 <input id="sensitivity" type="range" min="0" max="100" value="70" aria-label="吹气灵敏度"></label><button id="testSnow" type="button">演示雪花 ❄</button></div>
   <button id="recover" type="button">重新连接摄像头／麦克风</button>
  </section>
  <div id="toast" aria-live="polite"></div>
- <div id="entry"><div id="entryCard"><div class="mini">A LITTLE WINTER MAGIC</div><h2>Wake the<br>Winter</h2><p>张开手掌，轻轻转动圣诞树。<br>拨动铃铛，双手捧雪，然后对着麦克风吹气。</p><button id="begin" type="button">进入体验 · 开启摄像头</button><small>仅在设备内实时处理，不会上传摄像头或麦克风录制内容。<br>拒绝授权时仍可用触摸和测试按钮体验。</small></div></div>
+ <div id="entry"><div id="entryCard"><div class="mini">A LITTLE WINTER MAGIC</div><h2>Wake the<br>Winter</h2><p>张开手掌，轻轻转动圣诞树。<br>拨动铃铛，把双手合拢捧起雪花。<br>当摄像头显示“已捧雪”时，轻轻对着麦克风吹气。</p><button id="begin" type="button">进入体验 · 开启摄像头</button><small>仅在设备内实时处理，不会上传摄像头或麦克风录制内容。<br>拒绝授权时仍可用触摸和测试按钮体验。</small></div></div>
  <div id="rotateTip">↻ 请将手机横过来体验<br><small>Landscape mode</small></div>
 </main>
 <script type="module">
 const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const scene=$('scene'),plate=$('plate'),paintingOn=$('paintingOn'),fx=$('fx'),g=fx.getContext('2d');
 const camera=$('camera'),handMarks=$('handMarks'),hg=handMarks.getContext('2d');
 let W=0,H=0,dpr=1,last=performance.now();let entered=false,mediaReady=false,modelReady=false,micReady=false,handModel=null,videoStream=null,audioStream=null,ctx=null,an=null,anHi=null,wave=null,waveHi=null;
-let turn=0,turnTarget=0,winter=0,winterTarget=0,breathCooldown=0,handLast=0,lastFrame=-1,noiseFloor=.003,hiSmooth=0,rmsSmooth=0,breathHold=0,blowCount=0;
+let turn=0,turnTarget=0,winter=0,winterTarget=0,breathCooldown=0,handLast=0,lastFrame=-1,noiseFloor=.0018,hiSmooth=0,rmsSmooth=0,breathHold=0,blowCount=0;
+let cupConfidence=0,cupReady=false,lastCupSeen=-1,breathLatched=false,lastSignalAt=0,lastMeterAt=0,modelLoading=false;
+let freqHi=null,flatSmooth=0,snowSprites=[],legacyHandModel=null,legacyBusy=false;
 let hands=[],palm={x:0,y:0,active:false},cursor={x:0,y:0,on:false},pointerDown=false,pointerX=0,pointerMoved=0,previousTouches=new Map();
 let flakes=[],sparkles=[],dust=[];
 const positions=[
@@ -114,7 +123,49 @@ const positions=[
 ];
 const orns=positions.map(([kind,x,y],i)=>{const el=document.createElement('div');el.className='orn '+kind;el.style.left=(x/1120*100)+'%';el.style.top=((y+30)/1930*100)+'%';el.innerHTML='<span class="ring"></span><span class="charm"></span>';$('orbLayer').appendChild(el);return{el,kind,x,y,index:i,last:-1}});
 const edges=[[0,1],[0,5],[5,6],[5,9],[9,10],[9,13],[13,14],[13,17],[0,17],[0,2],[2,3],[3,4],[5,17],[6,7],[7,8],[9,18],[18,19],[19,20]];
-function clamp(x,a,b){return Math.max(a,Math.min(b,x))}function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function makeSnowSprites(){
+ snowSprites=[];
+ for(let style=0;style<4;style++){
+  const cv=document.createElement('canvas');cv.width=cv.height=96;const c=cv.getContext('2d');
+  c.translate(48,48);c.lineCap='round';c.lineJoin='round';
+  c.shadowColor='rgba(221,243,255,.65)';c.shadowBlur=5;
+  c.strokeStyle=style===3?'rgba(255,252,243,.98)':'rgba(236,249,255,.96)';c.lineWidth=style===2?2.4:1.75;
+  const length=29+(style%3)*2;
+  for(let arm=0;arm<6;arm++){
+   c.save();c.rotate(arm*Math.PI/3);
+   c.beginPath();c.moveTo(0,0);c.lineTo(0,-length);
+   for(let j=1;j<=3;j++){const yy=-length*(.28+j*.17),wing=(style===1?7:style===2?10:8)*(1-j*.1);
+    c.moveTo(0,yy);c.lineTo(-wing,yy-wing*.68);c.moveTo(0,yy);c.lineTo(wing,yy-wing*.68)}
+   if(style===3){c.moveTo(-4,-length*.8);c.lineTo(0,-length*1.08);c.lineTo(4,-length*.8)}
+   c.stroke();c.restore();
+  }
+  c.beginPath();c.arc(0,0,style===2?3.6:2.5,0,Math.PI*2);c.fillStyle='#fff';c.fill();
+  snowSprites.push(cv);
+ }
+}
+makeSnowSprites();
+function crystal(x,y,r,rot,alpha,variant=0){
+ const size=Math.max(2,r*1.7);if(!snowSprites.length)return;
+ g.save();g.globalAlpha=clamp(alpha,0,1);g.translate(x,y);g.rotate(rot);g.drawImage(snowSprites[variant%snowSprites.length],-size,-size,2*size,2*size);g.restore();
+}
+function cupGeometry(raw){
+ if(raw.length<2)return {candidate:false,score:0};
+ const k=(camera.videoWidth||640)/(camera.videoHeight||480);
+ const pt=l=>({x:l.x*k,y:l.y});
+ const a=raw[0],b=raw[1];
+ const center=h=>({x:(h[0].x+h[5].x+h[9].x+h[13].x+h[17].x)*k/5,y:(h[0].y+h[5].y+h[9].y+h[13].y+h[17].y)/5});
+ const A=center(a),B=center(b);const size=(dist(pt(a[5]),pt(a[17]))+dist(pt(b[5]),pt(b[17])))/2;
+ if(size<.025)return{candidate:false,score:0};
+ const gap=dist(A,B)/size, height=Math.abs(A.y-B.y)/size;
+ // This is a deliberately tolerant two-hand cupping proxy, not a trained cup-pose classifier.
+ const score=clamp(Math.min((3.6-gap)/1.6,1),0,1)*clamp((1.65-height)/.8,0,1);
+ return {candidate:gap>.55&&gap<3.55&&height<1.65,score,gap,height};
+}
+function setCupReady(ready){
+ cupReady=ready;const badge=$('cupBadge');badge.classList.toggle('ready',ready);
+ setLabel('cupText',ready?'❄ 已捧雪 · 可以轻吹':'捧雪状态：请将双手靠拢');
+}
 function stagePoint(it){const r=plate.getBoundingClientRect();return{x:r.left+it.x/1120*r.width,y:r.top+(it.y+30)/1930*r.height}}
 function nearest(x,y,r=68){let best=null,bd=r;for(const it of orns){const p=stagePoint(it),d=Math.hypot(x-p.x,y-p.y);if(d<bd){best=it;bd=d}}return best}
 function sound(i){if(!ctx)return;try{const now=ctx.currentTime,f=[659.26,783.99,880,987.77,1174.66,1318.51,1567.98][i%7];for(let j=0;j<3;j++){const o=ctx.createOscillator(),v=ctx.createGain();o.frequency.value=f*[1,2.01,3.06][j];o.type=j===0?'sine':'triangle';v.gain.setValueAtTime(.0001,now);v.gain.exponentialRampToValueAtTime(.07/(j+1),now+.012);v.gain.exponentialRampToValueAtTime(.0001,now+.4+j*.22);o.connect(v).connect(ctx.destination);o.start(now);o.stop(now+1.2)}}catch(e){console.warn('sound',e)}}
@@ -125,72 +176,184 @@ addEventListener('resize',resize);resize();
 function setLabel(id,str){$(id).textContent=str}function setDot(id,good,warning=false){$(id).classList.toggle('ok',good);$(id).classList.toggle('warn',warning)}
 function setHandStatus(t,count=0,good=false){setLabel('handStatus',t);setLabel('handCount',count+' hand'+(count===1?'':'s'));setDot('handDot',good,!good&&mediaReady)}
 function updateLabel(){setLabel('glowNumber','WINTER · '+String(Math.round(winter*100)).padStart(2,'0')+'%');setLabel('phaseName',winter<.05?'The tree is sleeping':winter<.38?'A little snow begins':winter<.8?'Winter is waking':'A winter full of magic')}
-function emitSnow(power=1,origin=null){let p=origin|| (palm.active?{x:palm.x,y:palm.y}:cursor.on?{x:cursor.x,y:cursor.y}:{x:W*.51,y:H*.58});const count=Math.round(320+190*power);for(let i=0;i<count;i++){const a=(Math.random()-.5)*2.5,spd=1.8+Math.random()*10*power;flakes.push({x:p.x+(Math.random()-.5)*18,y:p.y+(Math.random()-.5)*18,vx:Math.sin(a)*spd,vy:-Math.cos(a)*spd*.65-1-Math.random()*2,age:0,max:92+Math.random()*132,size:.65+Math.random()*2.25,depth:Math.random(),drift:Math.random()*6.28})}
-winterTarget=clamp(winterTarget+.34,0,1);blowCount++;breathCooldown=performance.now()+900;setLabel('breatheState','❄ 检测到吹气！第 '+blowCount+' 次');flash('❄ YOUR BREATH BECOMES SNOW');}
-function handleAudioSignal(raw,hi,now){rmsSmooth=rmsSmooth*.78+raw*.22;hiSmooth=hiSmooth*.73+hi*.27;
-// Follow quiet environments, but never adapt upward quickly during a breath.
-const floorTarget=Math.min(hi,.008);noiseFloor=noiseFloor*.987+floorTarget*.013;
-const sens=Number($('sensitivity').value)/100;const threshold=Math.max(.0035,(noiseFloor*2.45+.007)*(1.3-sens*.82));const gain=clamp(hiSmooth/(threshold*1.65),0,1);
-$('meterFill').style.width=(gain*100).toFixed(0)+'%';setLabel('micText',(hiSmooth*1000).toFixed(1)+' · THR '+(threshold*1000).toFixed(1));
-const isCandidate=hiSmooth>threshold && hiSmooth/Math.max(.0001,rmsSmooth)>.11;
-breathHold=isCandidate?Math.min(15,breathHold+1):Math.max(0,breathHold-1.5);
-if(breathHold>=3 && now>breathCooldown){emitSnow(clamp(hiSmooth/threshold,.9,1.55));breathHold=0}
-else if(now>breathCooldown && micReady && hiSmooth>threshold*.3){setLabel('breatheState',isCandidate?'气流已检测，继续吹气…':'麦克风正在收到声音')}
+function emitSnow(power=1,origin=null){
+ const p=origin||(palm.active?{x:palm.x,y:palm.y}:cursor.on?{x:cursor.x,y:cursor.y}:{x:W*.5,y:H*.58});
+ const count=Math.min(300,Math.round(115+90*power));
+ for(let i=0;i<count;i++){
+  const a=(Math.random()-.5)*2.6,spd=1.8+Math.random()*7*power;
+  flakes.push({x:p.x+(Math.random()-.5)*22,y:p.y+(Math.random()-.5)*18,vx:Math.sin(a)*spd,vy:-Math.cos(a)*spd*.55-1-Math.random()*1.5,
+   age:0,max:96+Math.random()*100,size:.9+Math.random()*2.3,depth:Math.random(),drift:Math.random()*6.28,spin:(Math.random()-.5)*.05,
+   rot:Math.random()*Math.PI*2,variant:Math.floor(Math.random()*4)});
+ }
+ if(flakes.length>650)flakes.splice(0,flakes.length-650);
+ winterTarget=clamp(winterTarget+.34,0,1);blowCount++;breathCooldown=performance.now()+1450;
+ setLabel('breatheState','❄ 已捧雪 + 检测到吹气 · 第 '+blowCount+' 次');flash('❄ SNOW INTO THE NIGHT');
 }
-function sampleAudio(now){if(!micReady||!an||!anHi)return;try{an.getFloatTimeDomainData(wave);anHi.getFloatTimeDomainData(waveHi);let a=0,b=0;for(let i=0;i<wave.length;i++){a+=wave[i]*wave[i];b+=waveHi[i]*waveHi[i]}handleAudioSignal(Math.sqrt(a/wave.length),Math.sqrt(b/waveHi.length),now)}catch(e){setLabel('breatheState','麦克风信号读取失败：'+e.message)}}
+function spectralFlatness(){
+ if(!anHi||!freqHi)return .5;
+ try{anHi.getFloatFrequencyData(freqHi);const sr=ctx?.sampleRate||48000;const start=Math.max(1,Math.round(850*freqHi.length*2/sr)),end=Math.min(freqHi.length-1,Math.round(5600*freqHi.length*2/sr));
+ let powerSum=0,logSum=0,n=0;
+ for(let i=start;i<end;i+=3){const db=clamp(freqHi[i],-110,0),power=Math.pow(10,db/10);powerSum+=power;logSum+=Math.log(power+1e-12);n++}
+ return n?Math.exp(logSum/n)/(powerSum/n+1e-12):.5;
+ }catch(e){return .5}
+}
+function handleAudioSignal(raw,hi,now,flat=.5){
+ const elapsed=lastSignalAt?clamp(now-lastSignalAt,12,90):24;lastSignalAt=now;
+ // Fast attack; slower release. Meter refresh is independent of the hand model.
+ rmsSmooth=raw>rmsSmooth?rmsSmooth*.30+raw*.70:rmsSmooth*.72+raw*.28;
+ hiSmooth=hi>hiSmooth?hiSmooth*.27+hi*.73:hiSmooth*.72+hi*.28;
+ flatSmooth=flatSmooth*.48+flat*.52;
+ if(hiSmooth<noiseFloor*1.45)noiseFloor=noiseFloor*.97+Math.min(hiSmooth,.014)*.03;
+ const sens=Number($('sensitivity').value)/100;
+ const threshold=Math.max(.0019,(noiseFloor*2.2+.0017)*(1.65-sens*.90));
+ const meter=clamp((hiSmooth/threshold)*60,0,100);
+ $('meterFill').style.width=meter.toFixed(0)+'%';setLabel('micText',(hiSmooth*1000).toFixed(1)+' / '+(threshold*1000).toFixed(1));
+ const ratio=hiSmooth/Math.max(.0003,rmsSmooth);
+ const airLike=(hiSmooth>threshold)&&(ratio>.18)&&(flatSmooth>.23||hiSmooth>threshold*2.8);
+ const permitted=modelReady&&cupReady&&palm.active&&(now-lastCupSeen<550);
+ if(!airLike){breathHold=0;if(breathLatched){if(hiSmooth<threshold*.75)breathLatched=false}}
+ else if(permitted&&!breathLatched&&now>breathCooldown){breathHold+=elapsed;}
+ else breathHold=0;
+ if(breathHold>=190&&permitted&&!breathLatched&&now>breathCooldown){
+  breathLatched=true;breathHold=0;emitSnow(clamp(hiSmooth/threshold,.8,1.6),{x:palm.x,y:palm.y});
+ }
+ else if(now-lastMeterAt>110){
+  lastMeterAt=now;
+  if(!modelReady)setLabel('breatheState','手势模型未就绪 · 仅有声音不触发雪花');
+  else if(!permitted)setLabel('breatheState','先把双手靠拢，显示“已捧雪”后再吹气');
+  else if(airLike)setLabel('breatheState',breathLatched?'❄ 已吹雪 · 放松后可以再次吹':'❄ 已捧雪 · 正在检测气流…');
+  else setLabel('breatheState','❄ 已捧雪 · 请对着麦克风轻吹');
+ }
+}
+function sampleAudio(now){if(!micReady||!an||!anHi)return;try{
+ an.getFloatTimeDomainData(wave);anHi.getFloatTimeDomainData(waveHi);
+ let a=0,b=0;for(let i=0;i<wave.length;i++){a+=wave[i]*wave[i];b+=waveHi[i]*waveHi[i]}
+ handleAudioSignal(Math.sqrt(a/wave.length),Math.sqrt(b/waveHi.length),now,spectralFlatness());
+ }catch(e){setLabel('breatheState','麦克风信号读取失败：'+e.message)}
+}
 function videoCoverPoint(l){return{x:(1-l.x)*W,y:l.y*H}}
 function drawHandSkeleton(raw){const r=$('videoWrap').getBoundingClientRect();hg.clearRect(0,0,r.width,r.height);
 const vw=camera.videoWidth||640,vh=camera.videoHeight||480,scale=Math.max(r.width/vw,r.height/vh),drawW=vw*scale,drawH=vh*scale;
 const left=(r.width-drawW)/2,top=(r.height-drawH)/2;
 const point=l=>({x:r.width-(left+l.x*drawW),y:top+l.y*drawH});
 for(const hand of raw){hg.strokeStyle='#f9d391';hg.lineWidth=1.8;hg.shadowBlur=3;hg.shadowColor='#ffcd7e';for(const [a,b] of edges){let p=point(hand[a]),q=point(hand[b]);hg.beginPath();hg.moveTo(p.x,p.y);hg.lineTo(q.x,q.y);hg.stroke()}hg.shadowBlur=0;for(const k of [0,4,8,12,16,20]){const p=point(hand[k]);hg.beginPath();hg.fillStyle=k===8?'#fff8d3':'#eacb96';hg.arc(p.x,p.y,k===8?4:2.4,0,Math.PI*2);hg.fill()}}}
-function applyHands(raw){hands=raw;drawHandSkeleton(raw);if(!raw.length){setHandStatus('没有检测到手',0,false);$('handsDetail').textContent='把手举到右侧实时预览中';$('cursor').classList.remove('show');cursor.on=false;palm.active=false;return}
-setHandStatus('手部追踪正常',raw.length,true);
-const h=raw[0],pt=videoCoverPoint(h[8]),span=dist(h[5],h[17]);const pinched=dist(h[4],h[8])<span*.47;
-const spread=[8,12,16,20].filter(j=>dist(h[j],h[0])>dist(h[j-2],h[0])*1.12).length;
-const open=spread>=3&&!pinched;
-cursor={x:pt.x,y:pt.y,on:true};const c=$('cursor');c.classList.add('show');c.classList.toggle('pinch',pinched);c.style.left=pt.x+'px';c.style.top=pt.y+'px';
-if(open){turnTarget=clamp((.5-h[9].x)*26,-14,14);$('handsDetail').textContent='✋ 张手 · 正在控制树转动';}
-else if(pinched){$('handsDetail').textContent='🤏 捏合 · 尝试靠近金色装饰';}
-else $('handsDetail').textContent='☝ 食指移动 · 靠近铃铛触发';
-const near=nearest(pt.x,pt.y,Math.max(52,Math.min(H*.12,92)));if(near){ring(near);$('handsDetail').textContent='✦ 已触碰 '+(near.kind==='bell'?'铃铛':near.kind==='star'?'星星':'金球')}
-if(raw.length>=2){const a=videoCoverPoint(raw[0][9]),b=videoCoverPoint(raw[1][9]);palm={x:(a.x+b.x)/2,y:(a.y+b.y)/2,active:true};$('handsDetail').textContent='❄ 双手识别成功 · 雪花已聚集，轻吹即可';}else palm.active=false;
+function applyHands(raw,now=performance.now()){
+ hands=raw;drawHandSkeleton(raw);
+ if(!raw.length){setHandStatus('没有检测到手',0,false);$('handsDetail').textContent='把双手放进右下角的实时预览';$('cursor').classList.remove('show');cursor.on=false;
+  cupConfidence=Math.max(0,cupConfidence-.32);palm.active=false;setCupReady(false);breathHold=0;return}
+ setHandStatus('手部追踪正常',raw.length,true);
+ const h=raw[0],pt=videoCoverPoint(h[8]),span=dist(h[5],h[17]);
+ const pinched=dist(h[4],h[8])<span*.47;
+ const spread=[8,12,16,20].filter(j=>dist(h[j],h[0])>dist(h[j-2],h[0])*1.12).length;
+ const open=spread>=3&&!pinched;
+ cursor={x:pt.x,y:pt.y,on:true};const c=$('cursor');c.classList.add('show');c.classList.toggle('pinch',pinched);c.style.left=pt.x+'px';c.style.top=pt.y+'px';
+ if(open){turnTarget=clamp((.5-h[9].x)*26,-14,14);$('handsDetail').textContent='✋ 张开手掌 · 可以转动圣诞树'}
+ else if(pinched){$('handsDetail').textContent='🤏 捏合 · 指向金色装饰'}
+ else $('handsDetail').textContent='☝ 移动食指 · 靠近金色铃铛';
+ const near=nearest(pt.x,pt.y,Math.max(52,Math.min(H*.12,92)));if(near&&!cupReady){ring(near);$('handsDetail').textContent='✦ 已触碰 '+(near.kind==='bell'?'铃铛':near.kind==='star'?'星星':'金球')}
+ const cup=cupGeometry(raw);
+ if(cup.candidate){cupConfidence=Math.min(1,cupConfidence+.40);lastCupSeen=now;}
+ else cupConfidence=Math.max(0,cupConfidence-.32);
+ const ready=raw.length>=2&&cupConfidence>=.65;
+ setCupReady(ready);
+ if(ready){const a=videoCoverPoint(raw[0][9]),b=videoCoverPoint(raw[1][9]);palm={x:(a.x+b.x)/2,y:(a.y+b.y)/2,active:true};$('handsDetail').textContent='❄ 已捧雪 · 可以轻吹'}
+ else{palm.active=false;if(raw.length>=2)$('handsDetail').textContent='把两只手再靠近一些，像捧住雪花'}
 }
-async function setupLandmarker(){setHandStatus('模型加载中…',0,false);$('handsDetail').textContent='首次需要下载手势识别模型';try{let module=null;let importError=null;
-for(const url of ['https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm','https://esm.sh/@mediapipe/tasks-vision@0.10.22']){
-  try{module=await import(url);break}catch(e){importError=e;console.warn('Hand tracker CDN failed',url,e)}
+async function setupLandmarker(){
+ if(modelLoading||modelReady)return;modelLoading=true;setHandStatus('手势模型加载中…',0,false);
+ $('handsDetail').textContent='首次加载需下载识别库与模型（可能需要数秒）';
+ const versions=[
+  {module:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/vision_bundle.mjs',wasm:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3/wasm'},
+  {module:'https://unpkg.com/@mediapipe/tasks-vision@1.2.3/vision_bundle.mjs',wasm:'https://unpkg.com/@mediapipe/tasks-vision@1.2.3/wasm'},
+  {module:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/vision_bundle.mjs',wasm:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/wasm'}
+ ];
+ const errors=[];
+ for(let i=0;i<versions.length;i++){
+  const src=versions[i];
+  try{
+   setHandStatus('正在加载识别模型 '+(i+1)+'/'+versions.length,0,false);
+   const mod=await import(src.module);
+   const HandLandmarker=mod.HandLandmarker||mod.default?.HandLandmarker;
+   const FilesetResolver=mod.FilesetResolver||mod.default?.FilesetResolver;
+   if(!HandLandmarker||!FilesetResolver)throw new Error('Module exports missing');
+   const vision=await FilesetResolver.forVisionTasks(src.wasm);
+   const opts={baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',delegate:'CPU'},runningMode:'VIDEO',numHands:2,minHandDetectionConfidence:.42,minHandPresenceConfidence:.42,minTrackingConfidence:.42};
+   handModel=await HandLandmarker.createFromOptions(vision,opts);
+   modelReady=true;setHandStatus('手势模型已就绪',0,true);
+   $('handsDetail').textContent='把两只手放进右下角画面，看到金色骨架即可互动';
+   $('recover').style.display='none';break;
+  }catch(e){errors.push((i+1)+': '+(e?.message||e));console.warn('Hand tracker source failed',src.module,e)}
+ }
+ if(!modelReady){
+  // Classic MediaPipe Hands is a separate fallback for Safari/CDN/Tasks-WASM failures.
+  for(const root of ['https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4','https://unpkg.com/@mediapipe/hands@0.4']){
+   try{
+    setHandStatus('尝试兼容手势引擎…',0,false);
+    if(!window.Hands){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=root+'/hands.js';
+      script.onload=resolve;script.onerror=()=>reject(new Error('Legacy JS download failed'));document.head.appendChild(script)})}
+    const legacy=new window.Hands({locateFile:file=>root+'/'+file});
+    legacy.setOptions({maxNumHands:2,modelComplexity:0,minDetectionConfidence:.47,minTrackingConfidence:.45,selfieMode:false});
+    legacy.onResults(result=>applyHands(result.multiHandLandmarks||[],performance.now()));
+    if(typeof legacy.initialize==='function')await legacy.initialize();
+    legacyHandModel=legacy;modelReady=true;setHandStatus('兼容手势引擎已就绪',0,true);
+    $('handsDetail').textContent='请把双手移入摄像头画面，检查能否看到骨架';
+    $('recover').style.display='none';break;
+   }catch(e){errors.push('Classic: '+(e?.message||e));console.warn('Classic Hands failed',root,e)}
+  }
+ }
+ if(!modelReady){setHandStatus('模型加载失败',0,false);$('handsDetail').textContent=errors.join(' | ').slice(0,180);
+  $('recover').style.display='block';$('recover').textContent='重新加载手势模型';}
+ modelLoading=false;
 }
-if(!module)throw importError||new Error('Cannot load MediaPipe');
-const {HandLandmarker,FilesetResolver}=module;const vision=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');const options={baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'},runningMode:'VIDEO',numHands:2,minHandDetectionConfidence:.42,minHandPresenceConfidence:.42,minTrackingConfidence:.42};try{handModel=await HandLandmarker.createFromOptions(vision,{...options,baseOptions:{...options.baseOptions,delegate:'GPU'}})}catch(e){handModel=await HandLandmarker.createFromOptions(vision,{...options,baseOptions:{...options.baseOptions,delegate:'CPU'}})}modelReady=true;setHandStatus('手势模型已就绪',0,false);$('handsDetail').textContent='把手放进实时预览，看到骨架即识别成功'}catch(e){console.error('HandLandmarker failed',e);setHandStatus('模型加载失败',0,false);$('handsDetail').textContent='可能是网络/CDN受限：'+String(e.message).slice(0,90);$('recover').style.display='block'}}
-function track(now){if(!modelReady||camera.readyState<2||now-handLast<60)return;handLast=now;if(camera.currentTime===lastFrame)return;lastFrame=camera.currentTime;try{const result=handModel.detectForVideo(camera,now);applyHands(result.landmarks||[])}catch(e){console.error('Hand detection runtime',e);setHandStatus('手部检测异常',0,false);$('handsDetail').textContent=String(e.message).slice(0,110)}}
+function track(now){
+ if(!modelReady||camera.readyState<2||now-handLast<115)return;
+ handLast=now;if(camera.currentTime===lastFrame)return;lastFrame=camera.currentTime;
+ if(legacyHandModel){if(legacyBusy)return;legacyBusy=true;
+   Promise.resolve(legacyHandModel.send({image:camera})).catch(e=>{console.error('Classic Hands runtime',e);setHandStatus('兼容识别异常',0,false)}).finally(()=>{legacyBusy=false});return}
+ try{const result=handModel.detectForVideo(camera,now);applyHands(result.landmarks||[],now)}
+ catch(e){console.error('Hand detection runtime',e);setHandStatus('手部检测异常',0,false);$('handsDetail').textContent=String(e.message).slice(0,110)}
+}
+
 async function requestMedia(){if(!navigator.mediaDevices?.getUserMedia){setHandStatus('浏览器不支持摄像头',0,false);setLabel('micText','UNSUPPORTED');$('recover').style.display='block';return}
-$('cameraHelp').textContent='正在连接摄像头…';setHandStatus('准备启动…',0,false);try{let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}},audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}catch(e){console.warn('Joint media unavailable, trying separately',e);let parts=[];for(const constraint of [{video:{facingMode:'user'}},{audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}]){try{const s=await navigator.mediaDevices.getUserMedia(constraint);parts.push(...s.getTracks())}catch(er){console.warn('Media component failed',er)}}if(!parts.length)throw e;stream=new MediaStream(parts)}
+$('cameraHelp').textContent='正在连接摄像头…';setHandStatus('准备启动…',0,false);try{let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:480},height:{ideal:360},frameRate:{ideal:24,max:30}},audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}})}catch(e){console.warn('Joint media unavailable, trying separately',e);let parts=[];for(const constraint of [{video:{facingMode:'user'}},{audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}]){try{const s=await navigator.mediaDevices.getUserMedia(constraint);parts.push(...s.getTracks())}catch(er){console.warn('Media component failed',er)}}if(!parts.length)throw e;stream=new MediaStream(parts)}
 const vt=stream.getVideoTracks();const at=stream.getAudioTracks();if(vt.length){videoStream=new MediaStream(vt);camera.srcObject=videoStream;camera.muted=true;camera.playsInline=true;try{await camera.play()}catch(e){console.warn('Autoplay failed',e);$('cameraHelp').textContent='点击预览以启动视频';$('cameraHelp').onclick=()=>camera.play()}
 mediaReady=true;$('cameraHelp').classList.add('hide');$('live').classList.add('on');setupLandmarker()}
-else{$('cameraHelp').textContent='摄像头未授权，可触摸交互';setHandStatus('CAMERA OFF',0,false)}
-if(at.length){audioStream=new MediaStream(at);if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();const source=ctx.createMediaStreamSource(audioStream);an=ctx.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.0;wave=new Float32Array(an.fftSize);source.connect(an);const filter=ctx.createBiquadFilter();filter.type='highpass';filter.frequency.value=350;source.connect(filter);anHi=ctx.createAnalyser();anHi.fftSize=2048;anHi.smoothingTimeConstant=.0;waveHi=new Float32Array(anHi.fftSize);filter.connect(anHi);micReady=true;setDot('micDot',true);setLabel('breatheState','麦克风已连接 · 对着手机麦克风轻吹');}
+else{$('cameraHelp').textContent='摄像头未授权，吹气不会触发雪花';setHandStatus('CAMERA OFF',0,false)}
+if(at.length){audioStream=new MediaStream(at);if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();const source=ctx.createMediaStreamSource(audioStream);an=ctx.createAnalyser();an.fftSize=1024;an.smoothingTimeConstant=.0;wave=new Float32Array(an.fftSize);source.connect(an);const filter=ctx.createBiquadFilter();filter.type='highpass';filter.frequency.value=350;source.connect(filter);anHi=ctx.createAnalyser();anHi.fftSize=1024;anHi.smoothingTimeConstant=.0;waveHi=new Float32Array(anHi.fftSize);freqHi=new Float32Array(anHi.frequencyBinCount);filter.connect(anHi);micReady=true;setDot('micDot',true);setLabel('breatheState','麦克风已连接 · 等待两只手捧雪');}
 else{micReady=false;setDot('micDot',false,true);setLabel('breatheState','未获得麦克风权限；可用“测试雪花”')}
 if(!vt.length||!at.length)$('recover').style.display='block';else $('recover').style.display='none';
 }catch(e){console.error('requestMedia',e);$('cameraHelp').textContent='未获取权限：'+(e.name||e.message);$('recover').style.display='block';setHandStatus('摄像头未连接',0,false);setLabel('breatheState','麦克风未连接，仍可使用触摸交互')}}
 function draw(now,dt){g.clearRect(0,0,W,H);g.save();for(const d of dust){d.y-=d.v*dt;d.x+=Math.sin(now*.00019+d.r)*.12*dt;if(d.y<-10){d.y=H+10;d.x=Math.random()*W}g.fillStyle=`rgba(233,178,98,${d.a})`;g.beginPath();g.arc(d.x,d.y,d.r,0,6.283);g.fill()}
 for(let i=sparkles.length-1;i>=0;i--){const p=sparkles[i];p.age+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.97;p.vy*=.97;const a=1-p.age/p.max;if(a<=0){sparkles.splice(i,1);continue}g.fillStyle=`rgba(255,219,147,${a*.8})`;g.shadowBlur=12;g.shadowColor='#ffd193';g.beginPath();g.arc(p.x,p.y,p.size*a,0,6.283);g.fill()}g.shadowBlur=0;
-if(palm.active){const x=palm.x,y=palm.y+10;const c=g.createRadialGradient(x,y,0,x,y,100);c.addColorStop(0,'rgba(245,249,255,.30)');c.addColorStop(.5,'rgba(233,244,255,.07)');c.addColorStop(1,'rgba(233,244,255,0)');g.fillStyle=c;g.beginPath();g.arc(x,y,100,0,6.283);g.fill();for(let i=0;i<29;i++){const angle=now*.0016+i*7.1,rad=15+(i%5)*8;g.fillStyle=`rgba(246,250,255,${.33+.4*Math.sin(i*23+now*.006)**2})`;g.beginPath();g.arc(x+Math.cos(angle)*rad,y+Math.sin(angle)*rad*.38,1.2+(i%3)*.6,0,6.283);g.fill()}}
-for(let i=flakes.length-1;i>=0;i--){const p=flakes[i];p.age+=dt;const age=p.age;const fly=age<42;p.drift+=.022*dt;
-if(fly){p.x+=p.vx*dt*1.25;p.y+=p.vy*dt*.96;p.vx*=.988;p.vy*=.993}else{p.x+=p.vx*dt*.25+Math.sin(p.drift)*.3;p.y+=dt*(.55+p.depth*.7);p.vx*=.992}
-const alpha=clamp(Math.min(age/8,1)*Math.min((p.max-age)/42,1),0,1);if(age>p.max){flakes.splice(i,1);continue}
-const radius=p.size*(.8+p.depth*1.2)*(fly?1+Math.min(age/33,1)*.65:1.05);g.fillStyle=`rgba(247,249,255,${alpha*(fly?.9:.65)})`;g.shadowBlur=fly?7:3;g.shadowColor='#dfeaff';g.beginPath();g.arc(p.x,p.y,radius,0,6.283);g.fill();if(fly && radius>3.8){g.strokeStyle=`rgba(246,249,255,${alpha*.75})`;g.lineWidth=.7;g.beginPath();g.moveTo(p.x-radius*1.5,p.y);g.lineTo(p.x+radius*1.5,p.y);g.moveTo(p.x,p.y-radius*1.5);g.lineTo(p.x,p.y+radius*1.5);g.stroke()}}
+if(palm.active){
+ const x=palm.x,y=palm.y+10;
+ const halo=g.createRadialGradient(x,y,0,x,y,78);halo.addColorStop(0,'rgba(238,247,255,.28)');halo.addColorStop(1,'rgba(222,240,255,0)');
+ g.fillStyle=halo;g.beginPath();g.arc(x,y,78,0,Math.PI*2);g.fill();
+ for(let i=0;i<20;i++){const ang=now*.0008+i*2.399,rad=10+(i%6)*5.7;
+  crystal(x+Math.cos(ang)*rad,y+Math.sin(ang)*rad*.45,2.3+(i%3)*.6,ang,.45+(i%3)*.12,i%4)}
+}
+for(let i=flakes.length-1;i>=0;i--){
+ const p=flakes[i];p.age+=dt;p.rot+=p.spin*dt;const fly=p.age<44;p.drift+=.016*dt;
+ if(fly){p.x+=p.vx*dt*1.16;p.y+=p.vy*dt*.95;p.vx*=.991;p.vy*=.994}
+ else{p.x+=p.vx*dt*.27+Math.sin(p.drift)*.27;p.y+=dt*(.48+p.depth*.8);p.vx*=.993}
+ const fade=clamp(Math.min(p.age/6,1)*Math.min((p.max-p.age)/35,1),0,1);
+ if(p.age>p.max){flakes.splice(i,1);continue}
+ const r=p.size*(.68+p.depth*.55)*(fly?1+Math.min(p.age/43,1)*1.45:.95);
+ if(p.depth<.18&&p.age>45){g.fillStyle=`rgba(248,252,255,${fade*.6})`;g.beginPath();g.arc(p.x,p.y,Math.max(.7,r*.4),0,Math.PI*2);g.fill()}
+ else crystal(p.x,p.y,r,p.rot,fade*(fly?.94:.78),p.variant);
+}
 g.restore();}
-function animate(now){const dt=clamp((now-last)/16.667,0,2.4);last=now;turn+=(turnTarget-turn)*.085*dt;winter+=(winterTarget-winter)*.03*dt;plate.style.setProperty('--treeTurn',turn.toFixed(2)+'deg');plate.style.setProperty('--treeShift',(turn*.68).toFixed(1)+'px');paintingOn.style.opacity=winter.toFixed(3);updateLabel();if(entered){track(now);sampleAudio(now)}draw(now,dt);requestAnimationFrame(animate)}requestAnimationFrame(animate);
+function animate(now){const dt=clamp((now-last)/16.667,0,2.4);last=now;turn+=(turnTarget-turn)*.085*dt;winter+=(winterTarget-winter)*.03*dt;plate.style.setProperty('--treeTurn',turn.toFixed(2)+'deg');plate.style.setProperty('--treeShift',(turn*.68).toFixed(1)+'px');paintingOn.style.opacity=winter.toFixed(3);updateLabel();if(entered){sampleAudio(now);track(now);if(cupReady&&now-lastCupSeen>560){palm.active=false;setCupReady(false);breathHold=0}}draw(now,dt);requestAnimationFrame(animate)}requestAnimationFrame(animate);
 async function enter(){if(entered)return;entered=true;$('entry').classList.add('hide');try{ctx=new (window.AudioContext||window.webkitAudioContext)();ctx.resume().catch(e=>console.warn('audio resume',e))}catch(e){console.warn('audio init',e)}requestMedia()}
 $('begin').addEventListener('click',enter);
-$('recover').addEventListener('click',()=>{if(!entered)enter();else requestMedia()});
-$('testSnow').addEventListener('click',()=>emitSnow(1.05,{x:palm.active?palm.x:W*.54,y:palm.active?palm.y:H*.58}));
+$('recover').addEventListener('click',()=>{if(modelReady)return requestMedia();if(mediaReady)return setupLandmarker();if(!entered)return enter();return requestMedia()});
+$('testSnow').addEventListener('click',()=>{emitSnow(1.05,{x:palm.active?palm.x:W*.54,y:palm.active?palm.y:H*.58});setLabel('breatheState','演示模式：此按钮不代表真实吹气识别')});
 scene.addEventListener('pointerdown',e=>{if(e.target.closest('#entry,#camHud'))return;if(!entered)return;pointerDown=true;pointerMoved=0;pointerX=e.clientX;scene.setPointerCapture?.(e.pointerId);previousTouches.set(e.pointerId,{startX:e.clientX,startY:e.clientY,x:e.clientX,y:e.clientY});const hit=nearest(e.clientX,e.clientY);if(hit)ring(hit)});
 scene.addEventListener('pointermove',e=>{if(!entered||e.target.closest('#camHud'))return;if(pointerDown){const dx=e.clientX-pointerX;pointerMoved+=Math.abs(dx);turnTarget=clamp(turnTarget+dx*.17,-14,14);pointerX=e.clientX}const v=previousTouches.get(e.pointerId);if(v){v.x=e.clientX;v.y=e.clientY}});
 scene.addEventListener('pointerup',e=>{if(!entered)return;if(pointerMoved<12){const hit=nearest(e.clientX,e.clientY,77);if(hit)ring(hit)}if(previousTouches.size>=2){const travel=[...previousTouches.values()].some(v=>v.startY-v.y>35);if(travel)emitSnow(.85,{x:W*.52,y:H*.58})}previousTouches.delete(e.pointerId);pointerDown=false});
 scene.addEventListener('pointercancel',e=>{previousTouches.delete(e.pointerId);pointerDown=false});
 addEventListener('keydown',e=>{if(!entered)return;if(e.key.toLowerCase()==='b'||e.key===' '){e.preventDefault();emitSnow(1)}if(e.key==='ArrowLeft')turnTarget=clamp(turnTarget-4,-14,14);if(e.key==='ArrowRight')turnTarget=clamp(turnTarget+4,-14,14)});
-window.__winterTest={enter,blow:(strength=1)=>emitSnow(strength),rotate:val=>turnTarget=val,ring:index=>ring(orns[index]),feedSignal:(r=.04,h=.032,frames=12)=>{for(let i=0;i<frames;i++)handleAudioSignal(r,h,performance.now()+i*16)},feedHands:applyHands,state:()=>({entered,mediaReady,modelReady,micReady,turn,turnTarget,winter,winterTarget,flakes:flakes.length,blowCount,ornaments:orns.length,noiseFloor,hiSmooth,hands:hands.length})};
+window.__winterTest={enter,blow:(strength=1)=>emitSnow(strength),rotate:val=>turnTarget=val,ring:index=>ring(orns[index]),feedSignal:(r=.04,h=.032,frames=12,flat=.75)=>{const t=performance.now();for(let i=0;i<frames;i++)handleAudioSignal(r,h,t+i*24,flat)},feedHands:applyHands,cup:cupGeometry,forceModel:(v=true)=>modelReady=v,state:()=>({entered,mediaReady,modelReady,micReady,turn,turnTarget,winter,winterTarget,flakes:flakes.length,blowCount,ornaments:orns.length,noiseFloor,hiSmooth,hands:hands.length,cupReady,cupConfidence,breathHold})};
 </script>
 </body>
 </html>
